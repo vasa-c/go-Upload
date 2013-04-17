@@ -1,4 +1,3 @@
-go-Upload
-=========
+# go\Upload: handling file uploads (PHP)
 
-Handling file uploads (PHP)
+PHP 5.3+
