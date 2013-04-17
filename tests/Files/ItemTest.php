@@ -115,4 +115,30 @@ class ItemTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('go\Upload\Files\Exceptions\FailUpload');
         return $item2->basename;
     }
+
+    /**
+     * @covers \go\Upload\Files\Item::isUploaded
+     */
+    public function testIsUploaded()
+    {
+        $params = array(
+            'name' => '1.txt',
+            'type' => 'text/plain',
+            'size' => 10,
+            'tmp_name' => '/tmp/tmp.txt',
+            'error' => 0,
+        );
+        $item = new Item($params);
+        $this->assertTrue($item->isUploaded());
+
+        $params2 = array(
+            'name' => '1.txt',
+            'type' => 'text/plain',
+            'size' => 10,
+            'tmp_name' => '/tmp/tmp.txt',
+            'error' => \UPLOAD_ERR_INI_SIZE,
+        );
+        $item2 = new Item($params2);
+        $this->assertFalse($item2->isUploaded());
+    }
 }

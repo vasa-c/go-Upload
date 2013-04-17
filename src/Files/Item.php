@@ -90,6 +90,16 @@ final class Item
     }
 
     /**
+     * Success or fail upload
+     *
+     * @return bool
+     */
+    public function isUploaded()
+    {
+        return (!$this->fail);
+    }
+
+    /**
      * Check params format
      *
      * @param array $params
