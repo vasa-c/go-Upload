@@ -8,6 +8,18 @@
 
 namespace go\Upload\Files;
 
+/**
+ * @property-read string $basename
+ *                original file name
+ * @property-read \go\Upload\Files\Type $type
+ *                mime-type of file
+ * @property-read string $tempFilename
+ *                path to temporary file
+ * @property-read int $size
+ *                size of file
+ * @property-read \go\Upload\Files\Error $error
+ *                upload error
+ */
 final class Item
 {
     /**
@@ -24,6 +36,7 @@ final class Item
             throw new Exceptions\FileParams($params);
         }
         $this->params = $params;
+        $this->fail = ($params['error'] != 0);
     }
 
     /**
@@ -34,6 +47,46 @@ final class Item
     public function getParams()
     {
         return $this->params;
+    }
+
+    /**
+     * Magic get
+     *
+     * @param string $key
+     * @return mixed
+     * @throws \go\Upload\Files\Exceptions\FailUpload
+     * @throws \go\Upload\Files\Exceptions\PropNotFound
+     */
+    public function __get($key)
+    {
+        if ($key == 'error') {
+            return $this->getErrorObject();
+        }
+        $this->mustUploaded();
+        switch ($key) {
+            case 'basename':
+                return $this->params['name'];
+            case 'type':
+                return $this->getTypeObject();
+            case 'tempFilename':
+                return $this->params['tmp_name'];
+            case 'size':
+                return $this->params['size'];
+            default:
+                throw new Exceptions\PropNotFound('Item', $key);
+        }
+    }
+
+    /**
+     * Set is forbidden
+     *
+     * @param string $key
+     * @param mixed $value
+     * @throws \go\Upload\Files\Exceptions\ReadOnly
+     */
+    public function __set($key, $value)
+    {
+        throw new Exceptions\ReadOnly('Item', $key);
     }
 
     /**
@@ -63,9 +116,68 @@ final class Item
     }
 
     /**
+     * Get mime-type object
+     *
+     * @return \go\Upload\Files\Type
+     */
+    private function getTypeObject()
+    {
+        if (!$this->typeObject) {
+            $this->typeObject = new Type($this->params['type']);
+        }
+        return $this->typeObject;
+    }
+
+    /**
+     * Get error object
+     *
+     * @return \go\Upload\Files\Error
+     */
+    private function getErrorObject()
+    {
+        if (!$this->errorObject) {
+            $this->errorObject = new Error($this->params['error']);
+        }
+        return $this->errorObject;
+    }
+
+    /**
+     * File must be uploaded
+     *
+     * @throws \go\Upload\Files\Exceptions\FailUpload
+     */
+    private function mustUploaded()
+    {
+        if ($this->fail) {
+            throw new Exceptions\FailUpload();
+        }
+    }
+
+    /**
      * Item params
      *
      * @var array
      */
     private $params;
+
+    /**
+     * Mime-type object
+     *
+     * @var \go\Upload\Files\Type
+     */
+    private $typeObject;
+
+    /**
+     * Object of upload error
+     *
+     * @var \go\Upload\Files\Error
+     */
+    private $errorObject;
+
+    /**
+     * Item is not uploaded
+     *
+     * @var bool
+     */
+    private $fail;
 }

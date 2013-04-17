@@ -24,7 +24,7 @@ class ItemTest extends \PHPUnit_Framework_TestCase
     {
         $params = array(
             'name' => '1.txt',
-            'type' => 'plain/text',
+            'type' => 'text/plain',
             'size' => 10,
             'tmp_name' => '/tmp/tmp.txt',
             'error' => 0,
@@ -50,11 +50,11 @@ class ItemTest extends \PHPUnit_Framework_TestCase
             )),
             array(array( // required param not found
                 'name' => '1.txt',
-                'type' => 'plain/text',
+                'type' => 'text/plain',
             )),
             array(array( // unknown param
                 'name' => '1.txt',
-                'type' => 'plain/text',
+                'type' => 'text/plain',
                 'size' => '10',
                 'unknown' => 'tst',
                 'tmp_name' => '/tmp/tmp.txt',
@@ -69,18 +69,50 @@ class ItemTest extends \PHPUnit_Framework_TestCase
             )),
             array(array( // not numeric size
                 'name' => '1.txt',
-                'type' => 'plain/text',
+                'type' => 'text/plain',
                 'size' => '10s5',
                 'tmp_name' => '/tmp/tmp.txt',
                 'error' => 1,
             )),
             array(array( // not numeric error
                 'name' => '1.txt',
-                'type' => 'plain/text',
+                'type' => 'text/plain',
                 'size' => '10',
                 'tmp_name' => '/tmp/tmp.txt',
                 'error' => '3x',
             )),
         );
+    }
+
+    /**
+     * @covers \go\Upload\Files\Item::__get
+     */
+    public function testMagicGetBaseParams()
+    {
+        $params = array(
+            'name' => '1.txt',
+            'type' => 'text/plain',
+            'size' => 10,
+            'tmp_name' => '/tmp/tmp.txt',
+            'error' => 0,
+        );
+        $item = new Item($params);
+        $this->assertEquals('1.txt', $item->basename);
+        $this->assertEquals('text', $item->type->media);
+        $this->assertEquals(10, $item->size);
+        $this->assertEquals('/tmp/tmp.txt', $item->tempFilename);
+        $this->assertEquals('ok', $item->error->name);
+
+        $params2 = array(
+            'name' => '1.txt',
+            'type' => 'text/plain',
+            'size' => 10,
+            'tmp_name' => '/tmp/tmp.txt',
+            'error' => \UPLOAD_ERR_INI_SIZE,
+        );
+        $item2 = new Item($params2);
+        $this->assertEquals('ini_size', $item2->error->name);
+        $this->setExpectedException('go\Upload\Files\Exceptions\FailUpload');
+        return $item2->basename;
     }
 }
