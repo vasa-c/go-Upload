@@ -19,8 +19,10 @@ namespace go\Upload\Files;
  *                size of file
  * @property-read \go\Upload\Files\Error $error
  *                upload error
+ * @property-read string $finalFilename
+ *                path to final file
  */
-final class Item
+class Item
 {
     /**
      * Constructor
@@ -72,6 +74,11 @@ final class Item
                 return $this->params['tmp_name'];
             case 'size':
                 return $this->params['size'];
+            case 'finalFilename':
+                if (!$this->saved) {
+                    throw new Exceptions\NotSaved();
+                }
+                return $this->finalFilename;
             default:
                 throw new Exceptions\PropNotFound('Item', $key);
         }
@@ -90,13 +97,43 @@ final class Item
     }
 
     /**
-     * Success or fail upload
-     *
      * @return bool
      */
     public function isUploaded()
     {
         return (!$this->fail);
+    }
+
+    /**
+     * @return boolead
+     */
+    public function isSaved()
+    {
+        return $this->saved;
+    }
+
+    /**
+     * Save file
+     *
+     * @param string $filename
+     *        final file name
+     * @param bool $repeat [optional]
+     *        allow re-save
+     * @throws \go\Upload\Files\Exceptions\FailUpload
+     * @throws \go\Upload\Files\Exceptions\AlreadySaved
+     * @throws \go\Upload\Files\Exceptions\FailSave
+     */
+    public function save($filename, $repeat = false)
+    {
+        $this->mustUploaded();
+        if ($this->saved && (!$repeat)) {
+            throw new Exceptions\AlreadySaved();
+        }
+        if (!$this->nativeMoveFile($this->params['tmp_name'], $filename)) {
+            throw new Exceptions\FailSave($filename);
+        }
+        $this->saved = true;
+        $this->finalFilename = $filename;
     }
 
     /**
@@ -164,6 +201,18 @@ final class Item
     }
 
     /**
+     * Move uploaded file
+     *
+     * @param string $destination
+     * @return bool
+     */
+    protected function nativeMoveFile($source, $destination)
+    {
+        // @ warning off - throw exception FailSave
+        return @\move_uploaded_file($source, $destination);
+    }
+
+    /**
      * Item params
      *
      * @var array
@@ -190,4 +239,18 @@ final class Item
      * @var bool
      */
     private $fail;
+
+    /**
+     * File is saved
+     *
+     * @var bool
+     */
+    private $saved = false;
+
+    /**
+     * Name of saved file
+     *
+     * @var string
+     */
+    private $finalFilename;
 }

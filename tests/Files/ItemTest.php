@@ -141,4 +141,93 @@ class ItemTest extends \PHPUnit_Framework_TestCase
         $item2 = new Item($params2);
         $this->assertFalse($item2->isUploaded());
     }
+
+    /**
+     * @covers \go\Upload\Files\Item::save
+     * @covers \go\Upload\Files\Item::isSaved
+     */
+    public function testSave()
+    {
+        require_once(__DIR__.'/wrappers/ItemMove.php');
+        $params = array(
+            'name' => '1.txt',
+            'type' => 'text/plain',
+            'size' => 10,
+            'tmp_name' => '/tmp/tmp.txt',
+            'error' => 0,
+        );
+        $item = new wrappers\ItemMove($params);
+
+        $this->assertFalse($item->isSaved());
+
+        $item->save('/storage/file.txt');
+        $this->assertTrue($item->isSaved());
+        $this->assertEquals('/storage/file.txt', $item->finalFilename);
+
+        $item->save('/storage/two.txt', true);
+        $this->assertEquals('/storage/two.txt', $item->finalFilename);
+
+        $expected = array(
+            '/tmp/tmp.txt to /storage/file.txt',
+            '/tmp/tmp.txt to /storage/two.txt',
+        );
+        $this->assertEquals($expected, $item->logs);
+
+        $this->setExpectedException('go\Upload\Files\Exceptions\AlreadySaved');
+        $item->save('/storage/three.txt');
+    }
+
+    /**
+     * @covers \go\Upload\Files\Item::save
+     * @expectedException go\Upload\Files\Exceptions\NotSaved
+     */
+    public function testSaveErrorNotSaved()
+    {
+        require_once(__DIR__.'/wrappers/ItemMove.php');
+        $params = array(
+            'name' => '1.txt',
+            'type' => 'text/plain',
+            'size' => 10,
+            'tmp_name' => '/tmp/tmp.txt',
+            'error' => 0,
+        );
+        $item = new wrappers\ItemMove($params);
+        return $item->finalFilename;
+    }
+
+    /**
+     * @covers \go\Upload\Files\Item::save
+     * @expectedException go\Upload\Files\Exceptions\FailUpload
+     */
+    public function testSaveErrorFailUpload()
+    {
+        require_once(__DIR__.'/wrappers/ItemMove.php');
+        $params = array(
+            'name' => '1.txt',
+            'type' => 'text/plain',
+            'size' => 10,
+            'tmp_name' => '/tmp/tmp.txt',
+            'error' => 1,
+        );
+        $item = new wrappers\ItemMove($params);
+        $item->save('/file.txt');
+    }
+
+    /**
+     * @covers \go\Upload\Files\Item::save
+     * @expectedException go\Upload\Files\Exceptions\FailSave
+     */
+    public function testSaveErrorFailSave()
+    {
+        require_once(__DIR__.'/wrappers/ItemMove.php');
+        $params = array(
+            'name' => '1.txt',
+            'type' => 'text/plain',
+            'size' => 10,
+            'tmp_name' => '/tmp/tmp.txt',
+            'error' => 0,
+        );
+        $item = new wrappers\ItemMove($params);
+        $item->save('/error/');
+    }
 }
