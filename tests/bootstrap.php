@@ -2,7 +2,7 @@
 /**
  * Initialization of unit tests for go\Upload packages
  *
- * @author  Григорьев Олег aka vasa_c <go.vasac@gmail.com>
+ * @author  Grigoriev Oleg aka vasa_c <go.vasac@gmail.com>
  * @package go\Upload\Tests
  */
 
