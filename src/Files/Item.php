@@ -34,7 +34,7 @@ class Item
      */
     public function __construct(array $params)
     {
-        if (!$this->isValidParams($params)) {
+        if (!FilesArray::isValidItem($params)) {
             throw new Exceptions\FileParams($params);
         }
         $this->params = $params;
@@ -134,32 +134,6 @@ class Item
         }
         $this->saved = true;
         $this->finalFilename = $filename;
-    }
-
-    /**
-     * Check params format
-     *
-     * @param array $params
-     * @return bool
-     */
-    private function isValidParams(array $params)
-    {
-        if (\count($params) != 5) {
-            return false;
-        }
-        $fields = array('name', 'type', 'tmp_name', 'size', 'error');
-        foreach ($fields as $field) {
-            if (!\array_key_exists($field, $params)) {
-                return false;
-            }
-            if (!\is_scalar($params[$field])) {
-                return false;
-            }
-        }
-        if ((!\is_int($params['size'])) || (!\is_int($params['error']))) {
-            return false;
-        }
-        return true;
     }
 
     /**
