@@ -29,6 +29,9 @@ class FilesArray
      */
     public static function normalize(array $files = null)
     {
+        if (!$files) {
+            $files = self::getSystemArray();
+        }
         $result = array();
         foreach ($files as $key => $value) {
             if (!\is_array($value)) {
