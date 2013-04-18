@@ -7,7 +7,7 @@
  * @author  Grigoriev Oleg aka vasa_c
  */
 
-namespace go\Upload\Files\Tests\wrappers;
+namespace go\Upload\Tests\Files\wrappers;
 
 class ItemMove extends \go\Upload\Files\Item
 {

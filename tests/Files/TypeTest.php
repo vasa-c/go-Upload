@@ -7,7 +7,7 @@
  * @author  Grigoriev Oleg aka vasa_c
  */
 
-namespace go\Upload\Files\Tests;
+namespace go\Upload\Tests\Files;
 
 use go\Upload\Files\Type;
 

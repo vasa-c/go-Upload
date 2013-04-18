@@ -7,7 +7,7 @@
  * @author  Grigoriev Oleg aka vasa_c
  */
 
-namespace go\Upload\Files\Tests;
+namespace go\Upload\Tests\Files;
 
 use go\Upload\Files\Item;
 
@@ -148,7 +148,6 @@ class ItemTest extends \PHPUnit_Framework_TestCase
      */
     public function testSave()
     {
-        require_once(__DIR__.'/wrappers/ItemMove.php');
         $params = array(
             'name' => '1.txt',
             'type' => 'text/plain',
@@ -183,7 +182,6 @@ class ItemTest extends \PHPUnit_Framework_TestCase
      */
     public function testSaveErrorNotSaved()
     {
-        require_once(__DIR__.'/wrappers/ItemMove.php');
         $params = array(
             'name' => '1.txt',
             'type' => 'text/plain',
@@ -201,7 +199,6 @@ class ItemTest extends \PHPUnit_Framework_TestCase
      */
     public function testSaveErrorFailUpload()
     {
-        require_once(__DIR__.'/wrappers/ItemMove.php');
         $params = array(
             'name' => '1.txt',
             'type' => 'text/plain',
@@ -219,7 +216,6 @@ class ItemTest extends \PHPUnit_Framework_TestCase
      */
     public function testSaveErrorFailSave()
     {
-        require_once(__DIR__.'/wrappers/ItemMove.php');
         $params = array(
             'name' => '1.txt',
             'type' => 'text/plain',
