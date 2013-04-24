@@ -15,6 +15,7 @@ class Storage
      *
      * @param array $config
      *        config of upload storage
+     * @throws \go\Upload\Images\Exceptions\ConfigFormat
      */
     public function __construct(array $config)
     {
