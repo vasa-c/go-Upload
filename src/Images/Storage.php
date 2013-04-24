@@ -19,6 +19,9 @@ class Storage
      */
     public function __construct(array $config)
     {
+        if ((!isset($config['types'])) || (!\is_array($config['types']))) {
+            throw new Exceptions\ConfigFormat('types list is not found');
+        }
         $this->config = $config;
     }
 

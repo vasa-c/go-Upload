@@ -42,4 +42,27 @@ class StorageTest extends \PHPUnit_Framework_TestCase
         $storage = new Storage($this->config);
         $this->assertEquals($this->config, $storage->getConfig());
     }
+
+    /**
+     * @covers go\Upload\Images\Storate::__construct
+     * @expectedException go\Upload\Images\Exceptions\ConfigFormat
+     * @dataProvider providerErrorConstructor
+     */
+    public function testErrorConstructor($config)
+    {
+        return new Storage($config);
+    }
+    public function providerErrorConstructor()
+    {
+        return array(
+            array(
+                array(),
+            ),
+            array(
+                array(
+                    'types' => 'types',
+                ),
+            ),
+        );
+    }
 }
