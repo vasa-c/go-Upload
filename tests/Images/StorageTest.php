@@ -34,8 +34,8 @@ class StorageTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @covers go\Upload\Images\Storate::__construct
-     * @covers go\Upload\Images\Storate::getConfig
+     * @covers go\Upload\Images\Storage::__construct
+     * @covers go\Upload\Images\Storage::getConfig
      */
     public function testGetConfig()
     {
@@ -44,7 +44,26 @@ class StorageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\Upload\Images\Storate::__construct
+     * @covers go\Upload\Images\Storage::getType
+     */
+    public function testGetType()
+    {
+        $storage = new Storage($this->config);
+
+        $one = $storage->getType('one');
+        $this->assertInstanceOf('go\Upload\Images\Types\Base', $one);
+        $this->assertEquals($storage, $one->getStorage());
+        $this->assertEquals('one', $one->getName());
+        $this->assertEquals($one, $storage->getType('one')); // cache
+
+        $this->assertEquals('two', $storage->getType('two')->getName());
+
+        $this->setExpectedException('go\Upload\Images\Exceptions\TypeNotFound');
+        return $storage->getType('unknown');
+    }
+
+    /**
+     * @covers go\Upload\Images\Storage::__construct
      * @expectedException go\Upload\Images\Exceptions\ConfigFormat
      * @dataProvider providerErrorConstructor
      */
