@@ -113,6 +113,29 @@ class Config
     }
 
     /**
+     * Get full config (with parent)
+     *
+     * @return array
+     */
+    public function getFullConfig()
+    {
+        if (!$this->parent) {
+            return $this->current;
+        }
+        return \array_merge($this->parent->getFullConfig(), $this->current);
+    }
+
+    /**
+     * Get current config (without parent)
+     *
+     * @return array
+     */
+    public function getCurrentConfig()
+    {
+        return $this->current;
+    }
+
+    /**
      * Get parent config
      *
      * @return \go\Upload\Images\Config
@@ -149,11 +172,4 @@ class Config
      * @var array
      */
     private $current;
-
-    /**
-     * Cache of childs
-     *
-     * @var array
-     */
-    private $childs = array();
 }

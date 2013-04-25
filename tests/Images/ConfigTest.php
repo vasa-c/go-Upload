@@ -201,4 +201,51 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('go\Upload\Images\Exceptions\PropNotFound');
         return $child->child('b');
     }
+
+    /**
+     * @covers go\Upload\Images\Config::getFullConfig
+     */
+    public function testGetFullConfig()
+    {
+        $config1 = new Config($this->c1);
+        $config2 = new Config($this->c2, $config1);
+        $config3 = new Config($this->c3, $config2);
+
+        $expected1 = array(
+            'one'   => 1,
+            'two'   => 2,
+            'three' => 3,
+        );
+        $expected2 = array(
+            'one' => 1,
+            'two'   => array('a' => 1, 'b' => 2, 'c' => 3),
+            'three' => true,
+            'four'  => 4,
+        );
+        $expected3 = array(
+            'one' => 1,
+            'two'   => array('a' => 1, 'b' => 2, 'c' => 3),
+            'three' => "string",
+            'four'  => array('x' => 5, 'y' => 6, 'z' => 7),
+            'six'   => 6,
+        );
+
+        $this->assertEquals($expected1, $config1->getFullConfig());
+        $this->assertEquals($expected2, $config2->getFullConfig());
+        $this->assertEquals($expected3, $config3->getFullConfig());
+    }
+
+    /**
+     * @covers go\Upload\Images\Config::getCurrentConfig
+     */
+    public function testGetCurrentConfig()
+    {
+        $config1 = new Config($this->c1);
+        $config2 = new Config($this->c2, $config1);
+        $config3 = new Config($this->c3, $config2);
+
+        $this->assertEquals($this->c1, $config1->getCurrentConfig());
+        $this->assertEquals($this->c2, $config2->getCurrentConfig());
+        $this->assertEquals($this->c3, $config3->getCurrentConfig());
+    }
 }
