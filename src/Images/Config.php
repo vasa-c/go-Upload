@@ -23,7 +23,12 @@ class Config
     public function __construct(array $config, Config $parent = null, $name = null)
     {
         $this->current = $config;
-        $this->parent = $parent;
+        if ($parent) {
+            $this->parent = $parent;
+            $this->config = \array_merge($parent->config, $config);
+        } else {
+            $this->config = $config;
+        }
         $this->name = $name;
     }
 
@@ -41,27 +46,10 @@ class Config
      */
     public function get($key, $type = null)
     {
-        if (!\array_key_exists($key, $this->cache)) {
-            if (\array_key_exists($key, $this->current)) {
-                $this->cache[$key] = $this->current[$key];
-            } else {
-                if (!$this->parent) {
-                    throw new Exceptions\PropNotFound($key, $this->name);
-                }
-                $this->cache[$key] = $this->parent->get($key, null);
-            }
+        if (!$this->exists($key, $type)) {
+            throw new Exceptions\PropNotFound($key, $this->name);
         }
-        $result = $this->cache[$key];
-        if ($type) {
-            if ($type == 'scalar') {
-                if (!\is_scalar($result)) {
-                    throw new Exceptions\PropNotFound($key, $this->name);
-                }
-            } elseif (\gettype($result) != $type) {
-                throw new Exceptions\PropNotFound($key, $this->name);
-            }
-        }
-        return $result;
+        return $this->config[$key];
     }
 
     /**
@@ -73,12 +61,17 @@ class Config
      */
     public function exists($key, $type = null)
     {
-        try {
-            $this->get($key, $type);
-        } catch (Exceptions\PropNotFound $e) {
+        if (!\array_key_exists($key, $this->config)) {
             return false;
         }
-        return true;
+        $value = $this->config[$key];
+        if (!$type) {
+            return true;
+        }
+        if ($type === 'scalar') {
+            return \is_scalar($value);
+        }
+        return (\gettype($value) === $type);
     }
 
     /**
@@ -160,11 +153,11 @@ class Config
     private $name;
 
     /**
-     * Cache of config
+     * Merged config
      *
      * @var array
      */
-    private $cache = array();
+    private $config;
 
     /**
      * Current config
