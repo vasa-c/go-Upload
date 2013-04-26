@@ -10,6 +10,7 @@ namespace go\Upload\Images\Types;
 
 use go\Upload\Images\Storage;
 use go\Upload\Images\Config;
+use go\Upload\Images\Exceptions;
 
 abstract class Base
 {
@@ -22,8 +23,6 @@ abstract class Base
      *        name of type
      * @return \go\Upload\Images\Types\Base
      *         requested type instance
-     * @throws \go\Upload\Images\Exception\TypeNotFound
-     *         type is not found
      * @throws \go\Upload\Images\Exception\ConfigFormat
      *         error type config format
      */
@@ -33,9 +32,14 @@ abstract class Base
         $ctypes = $config->child('types');
         $ctype = $ctypes->get($name, 'array');
         $ctype = new Config($ctype, $config, 'Type['.$name.']');
-        $kind = $ctype->get('kind', 'string');
-        $classname = __NAMESPACE__.'\\'.$kind; // @todo
-        return new $classname($storage, $ctype, $name); // @todo class_exists
+        $classname = $ctype->get('kind', 'string');
+        if (\substr($classname, 0, 1) != '\\') {
+            $classname = __NAMESPACE__.'\\'.$classname;
+        }
+        if (!\class_exists($classname, true)) {
+            throw new Exceptions\ConfigFormat('Error kind of type "'.$name.'"');
+        }
+        return new $classname($storage, $ctype, $name);
     }
 
     /**
