@@ -8,7 +8,7 @@
 
 namespace go\Upload\Images\Exceptions;
 
-final class PropNotFound extends Logic
+final class PropNotFound extends ConfigFormat
 {
     /**
      * Constructor

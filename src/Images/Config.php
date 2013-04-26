@@ -99,10 +99,13 @@ class Config
      */
     public function child($key, $name = null)
     {
-        if (\is_null($name)) {
-            $name = $this->name.'.'.$name;
+        if (!isset($this->childs[$key])) {
+            if (\is_null($name)) {
+                $name = $this->name.'.'.$name;
+            }
+            $this->childs[$key] = new self($this->get($key, 'array'), $this, $name);
         }
-        return new self($this->get($key, 'array'), $this, $name);
+        return $this->childs[$key];
     }
 
     /**
@@ -165,4 +168,11 @@ class Config
      * @var array
      */
     private $current;
+
+    /**
+     * Cache of children
+     *
+     * @var array
+     */
+    private $childs = array();
 }

@@ -10,6 +10,7 @@
 namespace go\Upload\Tests\Images;
 
 use go\Upload\Images\Storage;
+use go\Upload\Images\Config;
 
 /**
  * @covers go\Upload\Images\Storage
@@ -22,9 +23,12 @@ class StorageTest extends \PHPUnit_Framework_TestCase
      * @var array
      */
     private $config = array(
+        'param' => 3,
+        'param2' => 4,
         'types' => array(
             'one' => array(
                 'kind' => 'Test',
+                'param' => 'x',
             ),
             'two' => array(
                 'kind' => 'Test',
@@ -39,8 +43,14 @@ class StorageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetConfig()
     {
-        $storage = new Storage($this->config);
-        $this->assertEquals($this->config, $storage->getConfig());
+        $config1 = $this->config;
+        $storage1 = new Storage($config1);
+        $this->assertInstanceOf('go\Upload\Images\Config', $storage1->getConfig());
+        $this->assertEquals($this->config, $storage1->getConfig()->getFullConfig());
+        $config2 = new Config($this->config);
+        $storage2 = new Storage($config2);
+        $this->assertInstanceOf('go\Upload\Images\Config', $storage2->getConfig());
+        $this->assertEquals($this->config, $storage2->getConfig()->getFullConfig());
     }
 
     /**
@@ -55,10 +65,13 @@ class StorageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($storage, $one->getStorage());
         $this->assertEquals('one', $one->getName());
         $this->assertEquals($one, $storage->getType('one')); // cache
+        $fullconfig = $one->getConfig();
+        $this->assertEquals('x', $fullconfig->get('param'));
+        $this->assertEquals(4, $fullconfig->get('param2'));
 
         $this->assertEquals('two', $storage->getType('two')->getName());
 
-        $this->setExpectedException('go\Upload\Images\Exceptions\TypeNotFound');
+        $this->setExpectedException('go\Upload\Images\Exceptions\PropNotFound');
         return $storage->getType('unknown');
     }
 

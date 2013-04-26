@@ -17,18 +17,21 @@ class Storage
      *        config of upload storage
      * @throws \go\Upload\Images\Exceptions\ConfigFormat
      */
-    public function __construct(array $config)
+    public function __construct($config)
     {
-        if ((!isset($config['types'])) || (!\is_array($config['types']))) {
-            throw new Exceptions\ConfigFormat('types list is not found');
+        if (\is_array($config)) {
+            $config = new Config($config, null, 'Storage');
+        } elseif (!($config instanceof Config)) {
+            throw new Exceptions\ConfigFormat('Config must be array or Config instance');
         }
         $this->config = $config;
+        $this->config->child('types', 'Types');
     }
 
     /**
      * Get config of upload storage
      *
-     * @return array
+     * @return go\Upload\Config
      */
     public function getConfig()
     {
@@ -50,7 +53,7 @@ class Storage
     public function getType($name)
     {
         if (!isset($this->types[$name])) {
-            $this->types[$name] = Types\Base::getTypeByKind($this, $name);
+            $this->types[$name] = Types\Base::createTypeInstance($this, $name);
         }
         return $this->types[$name];
     }
@@ -58,7 +61,7 @@ class Storage
     /**
      * Config of upload storage
      *
-     * @var array
+     * @var \go\Upload\Images\Config
      */
     private $config;
 

@@ -9,7 +9,7 @@
 namespace go\Upload\Images\Types;
 
 use go\Upload\Images\Storage;
-use go\Upload\Images\Exceptions;
+use go\Upload\Images\Config;
 
 abstract class Base
 {
@@ -27,32 +27,31 @@ abstract class Base
      * @throws \go\Upload\Images\Exception\ConfigFormat
      *         error type config format
      */
-    public static function getTypeByKind(Storage $storage, $name)
+    public static function createTypeInstance(Storage $storage, $name)
     {
         $config = $storage->getConfig();
-        if (!isset($config['types'][$name])) {
-            throw new Exceptions\TypeNotFound($name);
-        }
-        $type = $config['types'][$name];
-        if ((!\is_array($type)) && (!isset($type['kind']))) {
-            throw new Exceptions\ConfigFormat('not specified kind for type "'.$name.'"');
-        }
-        $kind = $type['kind'];
+        $ctypes = $config->child('types');
+        $ctype = $ctypes->get($name, 'array');
+        $ctype = new Config($ctype, $config, 'Type['.$name.']');
+        $kind = $ctype->get('kind', 'string');
         $classname = __NAMESPACE__.'\\'.$kind; // @todo
-        return new $classname($storage, $name); // @todo class_exists
+        return new $classname($storage, $ctype, $name); // @todo class_exists
     }
 
     /**
-     * Constructor
+     * Constructor (protected. use createTypeInstance)
      *
      * @param \go\Upload\Images\Storage $storage
      *        parent storage
+     * @param \go\Upload\Images\Config $config
+     *        config of type
      * @param string $name
      *        type name
      */
-    public function __construct(Storage $storage, $name)
+    protected function __construct(Storage $storage, Config $config, $name)
     {
         $this->storage = $storage;
+        $this->config = $config;
         $this->name = $name;
     }
 
@@ -64,6 +63,16 @@ abstract class Base
     final public function getStorage()
     {
         return $this->storage;
+    }
+
+    /**
+     * Get type config
+     *
+     * @return \go\Upload\Images\Config
+     */
+    final public function getConfig()
+    {
+        return $this->config;
     }
 
     /**
@@ -82,6 +91,13 @@ abstract class Base
      * @var \go\Upload\Images\Storage
      */
     protected $storage;
+
+    /**
+     * Config of type
+     *
+     * @var \go\Upload\Images\Config
+     */
+    protected $config;
 
     /**
      * Name of type
