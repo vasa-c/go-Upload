@@ -43,6 +43,9 @@ abstract class Base implements Iface
         if (!$native->loadFromFile($infile)) {
             throw new Exceptions\SourceFileError($infile);
         }
+        if (!$this->convert($native)) {
+            throw new Exceptions\ConvertError();
+        }
         if (!$native->saveFile($outfile)) {
             throw new Exceptions\SaveError($outfile);
         }
