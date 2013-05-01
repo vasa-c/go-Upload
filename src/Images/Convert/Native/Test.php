@@ -8,10 +8,10 @@
 
 namespace go\Upload\Images\Convert\Native;
 
-class Test implements IFace
+class Test implements Iface
 {
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param string $filename
      * @return bool
@@ -26,7 +26,7 @@ class Test implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param string $blob
      * @return bool
@@ -45,7 +45,7 @@ class Test implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      */
     public function destroy()
     {
@@ -56,7 +56,7 @@ class Test implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param string $filename
      * @return bool
@@ -68,7 +68,7 @@ class Test implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @return string
      */
@@ -78,7 +78,7 @@ class Test implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @return int
      */
@@ -88,7 +88,7 @@ class Test implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @return int
      */
@@ -98,7 +98,7 @@ class Test implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @return int
      */
@@ -108,7 +108,7 @@ class Test implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param int $width
      * @param int $height
@@ -121,7 +121,7 @@ class Test implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param int $left
      * @param int $top
@@ -136,7 +136,7 @@ class Test implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param int $quality
      */

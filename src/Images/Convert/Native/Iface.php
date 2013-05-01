@@ -8,7 +8,7 @@
 
 namespace go\Upload\Images\Convert\Native;
 
-interface IFace
+interface Iface
 {
     /**
      * Load image from filename

@@ -9,10 +9,10 @@
 
 namespace go\Upload\Images\Convert\Native;
 
-class Imagick implements IFace
+class Imagick implements Iface
 {
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param string $filename
      * @return bool
@@ -28,7 +28,7 @@ class Imagick implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\IfFace
      *
      * @param string $blob
      * @return bool
@@ -45,7 +45,7 @@ class Imagick implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      */
     public function destroy()
     {
@@ -55,7 +55,7 @@ class Imagick implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param string $filename
      * @return bool
@@ -66,7 +66,7 @@ class Imagick implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @return string
      */
@@ -76,7 +76,7 @@ class Imagick implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @return int
      */
@@ -86,7 +86,7 @@ class Imagick implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @return int
      */
@@ -96,7 +96,7 @@ class Imagick implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @return int
      */
@@ -106,7 +106,7 @@ class Imagick implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param int $width
      * @param int $height
@@ -117,7 +117,7 @@ class Imagick implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param int $left
      * @param int $top
@@ -130,7 +130,7 @@ class Imagick implements IFace
     }
 
     /**
-     * @override \go\Upload\Images\Convert\Native\IFace
+     * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param int $quality
      */
