@@ -24,7 +24,7 @@ abstract class Base implements Iface
         $this->config = $config;
         $this->nativeClassname = $this->config->get('native_adapter', 'string');
         if (\substr($this->nativeClassname, 0, 1) != '\\') {
-            $this->nativeClassname = __NAMESPACE__.'\\'.$this->nativeClassname;
+            $this->nativeClassname = __NAMESPACE__.'\\Native\\'.$this->nativeClassname;
         }
     }
 
