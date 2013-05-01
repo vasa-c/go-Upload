@@ -35,12 +35,12 @@ class ObjectCreator
         }
         if (\is_scalar($params)) {
             $nconfig = self::createConfig(null, $config);
-            return self::createByClassname($params, $nconfig, $namespace);
+            return self::createByClassname($params, $namespace, array($nconfig));
         }
         if (\is_array($params)) {
             if (\array_key_exists('classname', $params)) {
                 $nconfig = self::createConfig($params, $config);
-                return self::createByClassname($params['classname'], $nconfig, $namespace);
+                return self::createByClassname($params['classname'], $namespace, array($nconfig));
             } elseif (\array_key_exists('creator', $params)) {
                 $nconfig = self::createConfig($params, $config);
                 return self::createByCreator($params['creator'], $nconfig, $namespace);
@@ -52,11 +52,14 @@ class ObjectCreator
     }
 
     /**
+     * Create instance by classname
+     * 
      * @param string $classname
-     * @param mixed $config
-     * @param string $namespace
+     * @param string $namespace [optional]
+     * @param array $args [optional]
+     * @return object
      */
-    private static function createByClassname($classname, $config, $namespace)
+    public static function createByClassname($classname, $namespace = null, array $args = null)
     {
         if ($namespace && (\substr($classname, 0, 1) !=='\\')) {
             $classname = $namespace.'\\'.$classname;
@@ -64,7 +67,8 @@ class ObjectCreator
         if (!\class_exists($classname, true)) {
             self::error('class "'.$classname.'" is not found');
         }
-        return new $classname($config);
+        $class = new \ReflectionClass($classname);
+        return $class->newInstanceArgs($args);
     }
 
     /**
