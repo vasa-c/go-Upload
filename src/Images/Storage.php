@@ -20,7 +20,7 @@ class Storage
     public function __construct($config)
     {
         if (\is_array($config)) {
-            $config = new Config($config, null, 'Storage');
+            $config = new Config($config, self::getRootConfig(), 'Storage');
         } elseif (!($config instanceof Config)) {
             throw new Exceptions\ConfigFormat('Config must be array or Config instance');
         }
@@ -59,6 +59,19 @@ class Storage
     }
 
     /**
+     * Get root config (default options)
+     *
+     * @return \go\Upload\Images\Config
+     */
+    final public static function getRootConfig()
+    {
+        if (!self::$rootConfig) {
+            self::$rootConfig = new Config(include(__DIR__.'/defaults.php'));
+        }
+        return self::$rootConfig;
+    }
+
+    /**
      * Config of upload storage
      *
      * @var \go\Upload\Images\Config
@@ -71,4 +84,9 @@ class Storage
      * @var array
      */
     private $types = array();
+
+    /**
+     * @var \go\Upload\Images\Config
+     */
+    private static $rootConfig;
 }

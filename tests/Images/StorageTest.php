@@ -46,7 +46,8 @@ class StorageTest extends \PHPUnit_Framework_TestCase
         $config1 = $this->config;
         $storage1 = new Storage($config1);
         $this->assertInstanceOf('go\Upload\Images\Config', $storage1->getConfig());
-        $this->assertEquals($this->config, $storage1->getConfig()->getFullConfig());
+        $expected = \array_merge(Storage::getRootConfig()->getFullConfig(), $config1);
+        $this->assertEquals($expected, $storage1->getConfig()->getFullConfig());
         $config2 = new Config($this->config);
         $storage2 = new Storage($config2);
         $this->assertInstanceOf('go\Upload\Images\Config', $storage2->getConfig());

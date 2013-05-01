@@ -9,6 +9,7 @@
 namespace go\Upload\Images;
 
 return array(
-
     'native_adapter' => 'Imagick',
+    'converter' => 'ResizeExactly',
+    'checker' => 'Base',
 );
