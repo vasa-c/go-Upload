@@ -35,16 +35,18 @@ interface Iface
      * Save image to file
      *
      * @param string $filename
+     * @param string $format [optional]
      * @return bool
      */
-    public function saveFile($filename);
+    public function saveFile($filename, $format = null);
 
     /**
      * Get binary representation of image
      *
+     * @param string $format [optional]
      * @return string
      */
-    public function getBlob();
+    public function getBlob($format = null);
 
     /**
      * Get image width

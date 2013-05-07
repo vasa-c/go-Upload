@@ -59,9 +59,10 @@ class Test implements Iface
      * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param string $filename
+     * @param string $format [optional]
      * @return bool
      */
-    public function saveFile($filename)
+    public function saveFile($filename, $format = null)
     {
         $this->log('saveFile '.$filename);
         return true;
@@ -70,9 +71,10 @@ class Test implements Iface
     /**
      * @override \go\Upload\Images\Convert\Native\Iface
      *
+     * @param string $format
      * @return string
      */
-    public function getBlob()
+    public function getBlob($format = null)
     {
         return $this->width.':'.$this->height.':'.$this->quality;
     }

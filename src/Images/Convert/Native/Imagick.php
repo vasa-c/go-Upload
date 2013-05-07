@@ -58,20 +58,29 @@ class Imagick implements Iface
      * @override \go\Upload\Images\Convert\Native\Iface
      *
      * @param string $filename
+     * @param string $format [optional]
      * @return bool
      */
-    public function saveFile($filename)
+    public function saveFile($filename, $format = null)
     {
-        $this->imagick->writeImage($filename);
+        if ($format) {
+            \file_put_contents($filename, $this->getBlob($format));
+        } else {
+            $this->imagick->writeImage($filename);
+        }
     }
 
     /**
      * @override \go\Upload\Images\Convert\Native\Iface
      *
+     * @param string $format [optional]
      * @return string
      */
-    public function getBlob()
+    public function getBlob($format = null)
     {
+        if ($format) {
+            $this->imagick->setFormat($format);
+        }
         return $this->imagick->getImageBlob();
     }
 
